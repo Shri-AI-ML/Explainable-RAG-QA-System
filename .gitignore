@@ -1,0 +1,5 @@
+
+
+# folder that needed to ignored
+venv/
+notebooks/
