@@ -1,5 +1,9 @@
 
-
+requirements.txt
 # folder that needed to ignored
 venv/
 notebooks/
+docs/
+__pycache__/
+*.pyc
+data/
