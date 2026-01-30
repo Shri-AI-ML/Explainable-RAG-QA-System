@@ -6,7 +6,6 @@ notebooks/
 docs/
 __pycache__/
 *.pyc
-data/
 outputs/
 
 
