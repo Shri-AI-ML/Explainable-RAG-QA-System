@@ -11,3 +11,4 @@ outputs/
 
 # specific files to ignore
 requirements.txt
+secrets/
