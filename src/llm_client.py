@@ -1,4 +1,5 @@
 import google.generativeai as genai
+
 import os
 
 class GeminiClient:
@@ -8,9 +9,10 @@ class GeminiClient:
             raise RuntimeError("GEMINI_API_KEY not set")
 
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel("gemini-pro")
+        self.model = genai.GenerativeModel("gemini-1.5-flash")
 
-    def generate(self, query, chunks):
+
+    def generate_answer(self, query, chunks):
         context = "\n\n".join(chunk["text"] for chunk in chunks)
 
         prompt = f"""
