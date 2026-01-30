@@ -1,35 +1,33 @@
-import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
 class VectorStore:
-    def __init__(self, model_name="all-MiniLM-L6-v2"):
-        self.model = SentenceTransformer(model_name)
-        self.index = None
-        self.texts = []
+    def __init__(self):
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")
+        self.embeddings = []
+        self.metadata = []
 
     def build_index(self, chunks):
-        self.texts = chunks
-        embeddings = self.model.encode(
-            [c["text"] for c in chunks],
-            convert_to_numpy=True
+        texts = [c["text"] for c in chunks]
+        self.embeddings = self.model.encode(texts, show_progress_bar=True)
+        self.metadata = chunks
+
+    def search(self, query, top_k=5):
+        query_emb = self.model.encode(query)
+
+        scores = np.dot(self.embeddings, query_emb) / (
+            np.linalg.norm(self.embeddings, axis=1) * np.linalg.norm(query_emb)
         )
 
-        dim = embeddings.shape[1]
-        self.index = faiss.IndexFlatL2(dim)
-        self.index.add(embeddings)
-
-    def search(self, query, top_k=3):
-        query_vec = self.model.encode([query], convert_to_numpy=True)
-        distances, indices = self.index.search(query_vec, top_k)
+        top_indices = scores.argsort()[-top_k:][::-1]
 
         results = []
-        for idx, dist in zip(indices[0], distances[0]):
-            chunk = self.texts[idx]
+        for idx in top_indices:
             results.append({
-                "chunk_id": chunk["chunk_id"],
-                "text": chunk["text"],
-                "score": float(dist)
+                "doc_id": self.metadata[idx]["doc_id"],
+                "chunk_id": self.metadata[idx]["chunk_id"],
+                "score": float(scores[idx]),
+                "text": self.metadata[idx]["text"]
             })
 
         return results

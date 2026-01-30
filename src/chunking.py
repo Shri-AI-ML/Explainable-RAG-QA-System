@@ -1,28 +1,34 @@
 import json
 
-def chunk_text(text, chunk_size=40):
-    words = text.split()
-    chunks = []
-
-    for i in range(0, len(words), chunk_size):
-        chunk = " ".join(words[i:i + chunk_size])
-        chunks.append(chunk)
-
-    return chunks
-
-
-def load_and_chunk(path):
+def chunk_documents(path, chunk_size=250, overlap=50):
     with open(path, "r", encoding="utf-8") as f:
         docs = json.load(f)
 
-    chunked_docs = []
-    for doc in docs:
-        chunks = chunk_text(doc["text"])
-        for idx, chunk in enumerate(chunks):
-            chunked_docs.append({
-                "doc_id": doc["doc_id"],
-                "chunk_id": f"{doc['doc_id']}_chunk_{idx}",
-                "text": chunk
+    chunks = []
+
+    for idx, doc in enumerate(docs):
+        # 🔒 SAFE doc_id handling (NO key error possible)
+        doc_id = f"wiki_{idx+1}"
+        text = doc.get("text", "")
+
+        if not text.strip():
+            continue
+
+        words = text.split()
+        start = 0
+        chunk_idx = 0
+
+        while start < len(words):
+            end = start + chunk_size
+            chunk_text = " ".join(words[start:end])
+
+            chunks.append({
+                "chunk_id": f"{doc_id}_chunk_{chunk_idx}",
+                "doc_id": doc_id,
+                "text": chunk_text
             })
 
-    return chunked_docs
+            start += chunk_size - overlap
+            chunk_idx += 1
+
+    return chunks
