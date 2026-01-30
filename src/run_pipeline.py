@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 from llm_client import GeminiClient
 from explain import ExplainabilityModule
 
@@ -10,7 +11,7 @@ def main():
     # ---------- RUN RETRIEVAL SCRIPT ----------
     print("[INFO] Running retrieval step...")
     subprocess.run(
-        ["python", "src/retrieval.py"],
+        [sys.executable, "src/retrieval.py"],
         check=True
     )
 
@@ -19,7 +20,8 @@ def main():
         retrieved_chunks = json.load(f)
 
     # ---------- QUERY ----------
-    query = "What is the current state of AI?"
+    with open("data/query.txt") as f:
+        query = f.read().strip()
 
     # ---------- LLM ----------
     llm = GeminiClient()
