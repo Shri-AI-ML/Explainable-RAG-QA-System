@@ -1,9 +1,18 @@
 import json
+import os
+from pathlib import Path
 from chunking import chunk_documents
 from vector_store import VectorStore
 
+# ---------------- PATH SETUP ----------------
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+OUTPUT_DIR = BASE_DIR / "outputs"
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
 # ---------------- LOAD DOCUMENTS ----------------
-chunks = chunk_documents("data/raw_cleaned.json")
+chunks = chunk_documents(str(DATA_DIR / "raw_cleaned.json"))
 print(f"[INFO] Total chunks created: {len(chunks)}")
 
 # ---------------- BUILD VECTOR STORE ----------------
@@ -11,7 +20,7 @@ store = VectorStore()
 store.build_index(chunks)
 
 # ---------------- READ QUERY ----------------
-with open("data/query.txt", "r", encoding="utf-8") as f:
+with open(DATA_DIR / "query.txt", "r", encoding="utf-8") as f:
     query = f.read().strip()
 
 if not query:
@@ -43,7 +52,7 @@ for i, r in enumerate(results, 1):
     print("-" * 60)
 
 # ---------------- SAVE JSON FOR ARYAN ----------------
-with open("outputs/retrieval_results.json", "w", encoding="utf-8") as f:
+with open(OUTPUT_DIR / "retrieval_results.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=2, ensure_ascii=False)
 
 print("\n[INFO] Retrieval results saved to outputs/retrieval_results.json")
