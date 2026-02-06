@@ -127,4 +127,4 @@ class ExplainabilityModule:
 
         plt.title("RAG Explainability Graph")
         plt.axis("off")
-        plt.show()
+        return plt.gcf()

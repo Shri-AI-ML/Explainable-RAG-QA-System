@@ -6,8 +6,8 @@ notebooks/
 docs/
 __pycache__/
 *.pyc
-data/
 outputs/
+secrets/
 
 
 # specific files to ignore
