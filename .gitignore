@@ -13,3 +13,4 @@ secrets/
 # specific files to ignore
 requirements.txt
 secrets/
+api.txt
