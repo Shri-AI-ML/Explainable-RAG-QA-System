@@ -1,0 +1,37 @@
+RAG PROJECT UPGRADE PLAN
+
+CORE UPGRADES: 1. MMR (Max Marginal Relevance) - Replace cosine
+similarity - Goal: diversity + relevance
+
+2.  Advanced Chunking
+    -   LangChain RecursiveCharacterTextSplitter
+    -   Semantic chunking
+3.  Embeddings
+    -   all-MiniLM-L6-v2
+4.  Vector Database
+    -   ChromaDB (persistent storage)
+5.  LLM Upgrade
+    -   Groq + LLaMA
+    -   Replace Gemini
+6.  Hybrid Retrieval (IMPORTANT)
+    -   Vector search + BM25
+7.  Vectorless RAG (Optional)
+    -   Keyword-based retrieval
+
+SYSTEM IMPROVEMENTS: 8. Explainability - Evidence chunks - Scores -
+Graph visualization
+
+9.  Ingestion Pipeline
+    -   PDF → auto parsing
+    -   JSON → auto conversion
+    -   No manual cleaning
+10. Pipeline Refactor
+
+-   Remove subprocess
+-   Modular structure
+
+FINAL TOUCH: 11. UI - Streamlit app
+
+12. Deployment
+
+-   Streamlit Cloud / Render
