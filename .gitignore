@@ -15,3 +15,5 @@ requirements.txt
 secrets/
 api.txt
 RAG_Upgrade_Plan.txt
+chroma_db/
+*.pkl
