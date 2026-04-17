@@ -1,47 +1,37 @@
-import os
-import sys
-from google import genai
+from groq import Groq
+from pathlib import Path
 
-# Add the current directory to sys.path to ensure local imports work
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+def load_api_key():
+    key_path = Path(__file__).resolve().parent.parent / "secrets" / "groq_api_key.txt"
+    with open(key_path, "r") as f:
+        return f.read().strip()
 
-from load_api_key import load_api_key
-
-class GeminiClient:
+class GroqClient:
     def __init__(self):
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            try:
-                api_key = load_api_key()
-            except Exception as e:
-                print(f"[WARN] Could not load API key from file: {e}")
+        api_key = load_api_key()
+        self.client = Groq(api_key=api_key)
 
-        if not api_key:
-            raise RuntimeError("GEMINI_API_KEY not set and could not be loaded from secrets file.")
-
-        self.client = genai.Client(api_key=api_key)
-
-    def generate_answer(self, query, chunks):
-        context = "\n\n".join(c["text"] for c in chunks[:3])
+    def generate_answer(self, query, retrieved_chunks):
+        context = "\n\n".join([c["text"] for c in retrieved_chunks])
 
         prompt = f"""
-Answer the question using ONLY the context below.
-If the context is insufficient, say so clearly.
+        You are an AI assistant.
 
-Context:
-{context}
+        Answer the question ONLY from the context.
 
-Question:
-{query}
+        Context:
+        {context}
 
-Return:
-- Final answer (3-4 lines)
-- Mention which evidence was used
-"""
+        Question:
+        {query}
 
-        response = self.client.models.generate_content(
-            model="models/gemini-2.5-flash-lite",
-            contents=prompt
+        Answer clearly:
+        """
+
+        response = self.client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3
         )
 
-        return response.text.strip()
+        return response.choices[0].message.content
