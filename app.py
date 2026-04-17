@@ -6,7 +6,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 from retrieval import VectorStore, chunk_documents
-from llm_client import GeminiClient
+from llm_client import GroqClient
 from explain import ExplainabilityModule
 import retrieval
 
@@ -25,7 +25,7 @@ def init_resources():
     store = VectorStore()
     store.build_index(chunks)
     
-    llm = GeminiClient()
+    llm = GroqClient()
     explainer = ExplainabilityModule()
     
     return store, llm, explainer
