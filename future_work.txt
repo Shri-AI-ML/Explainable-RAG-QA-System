@@ -1,7 +1,0 @@
-Using MMR(Maximal Marginal Relevance ) instead of Cosine similarity 
-Langchain RecursiveCharacterTextSpitter for chunking ,
-all-MiniLM-L6-V2 for embedding OR BM25 ,
-ChromaDB as vector store,
-Groq+LLaMA3.3 for inference 
-grok free api key 
-vectorless RAG

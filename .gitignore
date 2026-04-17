@@ -15,6 +15,5 @@ requirements.txt
 secrets/
 api.txt
 RAG_Upgrade_Plan.txt
-bm25.pkl
 chroma_db/
-future_work.txt
+data/bm25.pkl
