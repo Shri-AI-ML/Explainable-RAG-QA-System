@@ -1,33 +1,36 @@
 import json
-import subprocess
-import sys
-from llm_client import GeminiClient
+import time
+from llm_client import GroqClient
 from explain import ExplainabilityModule
-
-RETRIEVAL_JSON = "outputs/retrieval_results.json"
-
+from retrieval import run_retrieval  # 💀 NEW IMPORT
 
 def main():
-    # ---------- RUN RETRIEVAL SCRIPT ----------
-    print("[INFO] Running retrieval step...")
-    subprocess.run(
-        [sys.executable, "src/retrieval.py"],
-        check=True
-    )
+    start_total = time.time()
 
-    # ---------- LOAD RETRIEVAL RESULTS ----------
-    with open(RETRIEVAL_JSON, "r", encoding="utf-8") as f:
-        retrieved_chunks = json.load(f)
+    # ---------- RUN RETRIEVAL DIRECTLY ----------
+    print("[INFO] Running retrieval step...")
+    t1 = time.time()
+
+    retrieved_chunks = run_retrieval()  # 💀 NO subprocess
+
+    print("[TIME] Retrieval:", round(time.time() - t1, 2), "sec")
 
     # ---------- QUERY ----------
     with open("data/query.txt") as f:
         query = f.read().strip()
 
     # ---------- LLM ----------
-    llm = GeminiClient()
+    llm = GroqClient()
+
+    t2 = time.time()
+
     answer = llm.generate_answer(query, retrieved_chunks)
 
+    print("[TIME] LLM:", round(time.time() - t2, 2), "sec")
+
     # ---------- EXPLAINABILITY ----------
+    t3 = time.time()
+
     explainer = ExplainabilityModule()
     report = explainer.generate_explainability_report(
         query=query,
@@ -35,12 +38,17 @@ def main():
         retrieved_chunks=retrieved_chunks
     )
 
+    print("[TIME] Explainability:", round(time.time() - t3, 2), "sec")
+
+    # ---------- OUTPUT ----------
     print(json.dumps(report, indent=2))
     explainer.visualize_evidence()
+
+    print("[TIME] TOTAL:", round(time.time() - start_total, 2), "sec")
 
 
 if __name__ == "__main__":
     main()
 
 
-
+## delete data/bm25.pkl
