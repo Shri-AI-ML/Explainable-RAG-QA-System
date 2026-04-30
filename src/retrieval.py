@@ -18,7 +18,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 BM25_PATH = DATA_DIR / "bm25.pkl"
 
 
-def run_retrieval(query):
+def run_retrieval(query=None):
 
     # ---------------- LOAD DOCUMENTS ----------------
     CHUNKS_PATH = DATA_DIR / "chunks.json"
@@ -37,7 +37,12 @@ def run_retrieval(query):
     print(f"[INFO] Total chunks: {len(chunks)}")
 
     # ---------------- BM25 (DISK CACHE ) ----------------
-    if BM25_PATH.exists():
+    rebuild_bm25 = True
+    if BM25_PATH.exists() and CHUNKS_PATH.exists():
+        if os.path.getmtime(BM25_PATH) > os.path.getmtime(CHUNKS_PATH):
+            rebuild_bm25 = False
+
+    if not rebuild_bm25:
         print("[INFO] Loading BM25 from disk ")
         with open(BM25_PATH, "rb") as f:
             bm25 = pickle.load(f)
@@ -49,23 +54,27 @@ def run_retrieval(query):
         with open(BM25_PATH, "wb") as f:
             pickle.dump(bm25, f)
 
-        print("[INFO] BM25 saved 💀")
+        print("[INFO] BM25 saved")
 
     # ---------------- VECTOR STORE ----------------
     store = VectorStore()
     store.build_index(chunks)
 
     # ---------------- READ QUERY ----------------
-    with open(DATA_DIR / "query.txt", "r", encoding="utf-8") as f:
-        query = f.read().strip()
+    if not query:
+        with open(DATA_DIR / "query.txt", "r", encoding="utf-8") as f:
+            query = f.read().strip()
 
     if not query:
-        raise ValueError("Query file is empty!")
+        raise ValueError("Query is empty!")
 
     query_lower = query.lower()  #  optimize
 
     # ---------------- CLEAN QUERY ----------------
-    stopwords = {"what", "is", "the", "a", "an", "of"}
+    stopwords = {
+    "what","is","the","a","an","of","in","on","for",
+    "to","with","and","by","from","at","as"
+    }
     tokenized_query = [
         word for word in query_lower.split()
         if word not in stopwords
@@ -103,13 +112,14 @@ def run_retrieval(query):
 
     for r in vector_results:
         if max_vec - min_vec != 0:
-            r["score"] = (r["score"] - min_vec) / (max_vec - min_vec)
+            # Chroma returns distance (lower is better), so we invert it
+            r["score"] = 1.0 - ((r["score"] - min_vec) / (max_vec - min_vec))
         else:
-            r["score"] = 0.0
+            r["score"] = 1.0
 
     # ---------------- HYBRID FUSION ----------------
-    alpha = 0.7
-    beta = 0.3
+    alpha = 0.85
+    beta = 0.15
 
     combined_dict = {}
 
