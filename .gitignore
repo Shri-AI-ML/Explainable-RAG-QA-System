@@ -17,3 +17,5 @@ api.txt
 RAG_Upgrade_Plan.txt
 chroma_db/
 data/bm25.pkl
+data/raw/
+data/processed/
