@@ -8,3 +8,4 @@ sentence-transformers
 chromadb
 pypdf
 groqhuggingface_hub
+huggingface_hub
