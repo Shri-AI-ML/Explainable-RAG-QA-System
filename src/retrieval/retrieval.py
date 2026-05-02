@@ -3,13 +3,13 @@ import os
 import pickle
 from pathlib import Path
 from src.chunking import chunk_documents
-from src.vector_store import VectorStore
+from src.core.vector_store import VectorStore
 from rank_bm25 import BM25Okapi
 
 USE_SAVED_CHUNKS = True
 
 # ---------------- PATH SETUP ----------------
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DATA_DIR = BASE_DIR / "data"
 OUTPUT_DIR = BASE_DIR / "outputs"
 

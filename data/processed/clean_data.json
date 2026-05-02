@@ -1,18 +1,18 @@
 [
   {
-    "doc_id": "62f1a7bd-3ad2-4f2a-9696-67d9a69064b6",
+    "doc_id": "f4f56566-582b-4c1b-ae22-09566c196e07",
     "text": "Artificial Intelligence is the simulation of human intelligence in machines that are programmed to think and learn."
   },
   {
-    "doc_id": "f80c2a7d-36e6-40c7-9986-6d2306ac1364",
+    "doc_id": "95acaa67-3ecc-4d2c-a370-2ae09532f068",
     "text": "Data Science is an interdisciplinary field that uses scientific methods, algorithms, and systems to extract knowledge from data."
   },
   {
-    "doc_id": "90e79dc4-beae-4215-83a5-a0d6e554f7b3",
+    "doc_id": "725b412b-4cad-4f61-a449-0a8a392c4fe9",
     "text": "Emotional intelligence refers to the ability to perceive, control, and evaluate emotions."
   },
   {
-    "doc_id": "4f4f0057-9fad-4c79-b4e9-0a87fc9a837b",
+    "doc_id": "50ac48ef-f487-4c08-9895-79140c67669c",
     "text": "Machine Learning is a subset of artificial intelligence that allows \nsystems to learn from data. \n \nDeep Learning is a subset of machine learning that uses neural networks."
   }
 ]

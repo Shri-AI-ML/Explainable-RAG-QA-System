@@ -1,8 +1,8 @@
 import json
 import time
-from llm_client import GroqClient
-from explain import ExplainabilityModule
-from retrieval import run_retrieval  # 💀 NEW IMPORT
+from src.llm_client import GroqClient
+from src.explain import ExplainabilityModule
+from src.retrieval.retrieval import run_retrieval  # 💀 NEW IMPORT
 
 def main():
     start_total = time.time()
