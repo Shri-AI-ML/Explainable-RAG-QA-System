@@ -1,5 +1,5 @@
 from langchain_community.vectorstores import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 import os
 import shutil
 import hashlib
@@ -10,7 +10,12 @@ class VectorStore:
     def __init__(self):
         self.persist_dir = "chroma_db"
 
-        self.embedding = HuggingFaceEmbeddings(
+        api_key = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+        if not api_key:
+            raise ValueError("HUGGINGFACEHUB_API_TOKEN environment variable not set")
+            
+        self.embedding = HuggingFaceInferenceAPIEmbeddings(
+            api_key=api_key,
             model_name="sentence-transformers/all-MiniLM-L6-v2"
         )
 

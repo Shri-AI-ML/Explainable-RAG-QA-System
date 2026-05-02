@@ -7,4 +7,4 @@ langchain-huggingface
 sentence-transformers
 chromadb
 pypdf
-groq
+groqhuggingface_hub
