@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from src.retrieval import run_retrieval
+from src.retrieval.retrieval import run_retrieval
 from src.llm_client import GroqClient
 
 app = FastAPI()

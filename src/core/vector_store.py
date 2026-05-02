@@ -10,12 +10,15 @@ class VectorStore:
     def __init__(self):
         self.persist_dir = "chroma_db"
 
-        #  load embedding model
         self.embedding = HuggingFaceEmbeddings(
             model_name="sentence-transformers/all-MiniLM-L6-v2"
         )
 
-        self.db = None
+        # 🔥 ALWAYS initialize DB (load or create)
+        self.db = Chroma(
+            persist_directory=self.persist_dir,
+            embedding_function=self.embedding
+        )
 
     # ---------------- HASH FUNCTION ----------------
     def get_chunks_hash(self, chunks):

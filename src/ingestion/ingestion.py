@@ -5,12 +5,9 @@ import uuid
 import sys
 from pathlib import Path
 
-# Add the src/ingestion directory to path so relative imports work
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-from pdf_loader import load_pdf
-from json_loader import load_json
-from cleaner import clean_text
+from src.ingestion.pdf_loader import load_pdf
+from src.ingestion.json_loader import load_json
+from src.ingestion.cleaner import clean_text
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(message)s")
