@@ -5,36 +5,46 @@ from src.llm_client import GroqClient
 
 app = FastAPI()
 
-llm = GroqClient()
 
-# 💀 request body
+#  REQUEST MODEL 
 class QueryRequest(BaseModel):
     query: str
 
 
+#  HEALTH CHECK 
 @app.get("/")
 def home():
-    return {"message": "RAG API running 💀"}
+    return {"message": "RAG API running "}
 
 
+#  QUERY ENDPOINT 
 @app.post("/query")
 def query_api(request: QueryRequest):
+    try:
+        query = request.query
 
-    query = request.query
+        # Lazy load everything (important for Render)
+        llm = GroqClient()
 
-    # 🔥 run retrieval with dynamic query
-    retrieved_chunks = run_retrieval(query)
+        # Retrieval
+        retrieved_chunks = run_retrieval(query)
 
-    answer = llm.generate_answer(query, retrieved_chunks)
+        #  Generate answer
+        answer = llm.generate_answer(query, retrieved_chunks)
 
-    return {
-    "question": query,
-    "answer": answer,
-    "sources": [
-        {
-            "doc": c["doc_id"],
-            "preview": c["text"][:120]
+        return {
+            "question": query,
+            "answer": answer,
+            "sources": [
+                {
+                    "doc": c.get("doc_id", ""),
+                    "preview": c.get("text", "")[:120]
+                }
+                for c in retrieved_chunks
+            ]
         }
-        for c in retrieved_chunks
-    ]
-}
+
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
