@@ -6,7 +6,7 @@ from src.llm_client import GroqClient
 app = FastAPI()
 
 
-#  REQUEST MODEL 
+#  request body
 class QueryRequest(BaseModel):
     query: str
 
@@ -23,13 +23,11 @@ def query_api(request: QueryRequest):
     try:
         query = request.query
 
-        # Lazy load everything (important for Render)
-        llm = GroqClient()
-
-        # Retrieval
+        #  run retrieval with dynamic query
         retrieved_chunks = run_retrieval(query)
 
         #  Generate answer
+        llm = GroqClient()
         answer = llm.generate_answer(query, retrieved_chunks)
 
         return {
