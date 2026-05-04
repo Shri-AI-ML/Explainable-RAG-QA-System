@@ -1,5 +1,6 @@
 from groq import Groq
 import os
+from load_api_key import load_api_key
 
 
 class GroqClient:
@@ -7,7 +8,13 @@ class GroqClient:
         api_key = os.getenv("GROQ_API_KEY")
 
         if not api_key:
-            raise ValueError("GROQ_API_KEY not found in environment variables")
+            try:
+                api_key = load_api_key()
+            except Exception:
+                pass
+
+        if not api_key:
+            raise ValueError("GROQ_API_KEY not found in environment variables or secrets file")
 
         self.client = Groq(api_key=api_key)
 
