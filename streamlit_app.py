@@ -1,4 +1,6 @@
 import streamlit as st
+from dotenv import load_dotenv
+load_dotenv()
 from src.retrieval.retrieval import run_retrieval
 from src.llm_client import GroqClient
 

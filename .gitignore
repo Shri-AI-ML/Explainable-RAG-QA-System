@@ -10,7 +10,6 @@ outputs/
 secrets/
 
 
-
 # specific files to ignore
 
 secrets/
@@ -20,4 +19,3 @@ chroma_db/
 data/bm25.pkl
 data/raw/
 data/processed/
-.env.example
